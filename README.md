@@ -19,6 +19,9 @@ Todos los comandos se lanzan desde la raíz del proyecto, con Python 3.12.
 
    En macOS/Linux: `python3.12 -m venv .venv` y `source .venv/bin/activate`.
 
+   En Windows también puedes instalar las dependencias sin activar el entorno con
+   `.\.venv\Scripts\python.exe -m pip install -r requirements.txt`.
+
 2. Descargar los datos: `python scripts/download_data.py`
 3. Preparar la tabla limpia: `python -m src.data_loader`
 4. API (terminal 1): `bentoml serve api.service:SmartNoseAPI` → http://localhost:3000
