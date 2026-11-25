@@ -1,0 +1,14 @@
+# Entornos
+venv/
+.venv/
+.env
+
+# Datos y modelos (no se suben)
+data/raw/
+data/processed/
+models/*.joblib
+
+# Temporales
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
