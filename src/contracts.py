@@ -5,24 +5,22 @@ Funciones públicas: ninguna (solo constantes).
 """
 from pathlib import Path
 
-# --- Rutas (relativas a la raíz del proyecto) ---
 ROOT_DIR = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT_DIR / "data" / "raw"
 PROCESSED_DIR = ROOT_DIR / "data" / "processed"
 CLEAN_DATA_PATH = PROCESSED_DIR / "gas_drift.parquet"
 MODELS_DIR = ROOT_DIR / "models"
-MODEL_PATH = MODELS_DIR / "smartnose_pipeline.joblib"  # el que sirve la API
+MODEL_PATH = MODELS_DIR / "smartnose_pipeline.joblib"
 
 RANDOM_STATE = 42
 API_URL = "http://localhost:3000"
 
-# --- Datos ---
 N_BATCHES = 10
 N_FEATURES = 128
 # El orden es fijo: es el mismo en la tabla, en el entrenamiento y en la API
 FEATURE_COLUMNS = []
 for numero in range(1, N_FEATURES + 1):
-    FEATURE_COLUMNS.append(f"feature_{numero}")  # feature_1 ... feature_128
+    FEATURE_COLUMNS.append(f"feature_{numero}")
 
 TABLE_COLUMNS = ["batch", "gas", "gas_name", "concentration"] + FEATURE_COLUMNS
 # Codificación según el texto de UCI. OJO: ver la duda abierta en data/README.md

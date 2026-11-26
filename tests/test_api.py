@@ -9,4 +9,3 @@ def test_servicio_se_importa():
     from api.service import SmartNoseAPI
 
     assert SmartNoseAPI is not None
-    # Pendiente: probar /predict cuando exista el modelo

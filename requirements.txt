@@ -10,3 +10,4 @@ bentoml==1.4.40
 requests==2.34.2
 pytest==9.2.0
 ipykernel==7.4.0
+plotly==7.2.0
