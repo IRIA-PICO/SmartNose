@@ -13,11 +13,12 @@ Todos los comandos se lanzan desde la raíz del proyecto, con Python 3.12.
 
 1. Instalar (PowerShell):
 
-       py -3.12 -m venv .venv
-       .venv\Scripts\Activate.ps1
+       py -3.12 -m venv nose
+       nose\Scripts\Activate.ps1
        pip install -r requirements.txt
 
-   En macOS/Linux: `python3.12 -m venv .venv` y `source .venv/bin/activate`.
+   En macOS/Linux: `python3.12 -m venv nose` y `source nose/bin/activate`.
+   El entorno se llama `nose`. Cada una crea el suyo: la carpeta no se sube a git.
 
 2. Descargar los datos: `python scripts/download_data.py`
 3. Preparar la tabla limpia: `python -m src.data_loader`
