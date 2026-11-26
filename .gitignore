@@ -1,6 +1,7 @@
 # Entornos
 venv/
 .venv/
+nose/
 .env
 
 # Datos y modelos (no se suben)

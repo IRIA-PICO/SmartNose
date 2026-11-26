@@ -8,17 +8,30 @@ Flujo previsto: notebook + funciones de `src/` → Streamlit → API BentoML loc
 
 **Estado:** estructura inicial y carga de datos. Todavía no hay modelos, gráficas ni predicciones.
 
+## Primera vez: crear el entorno
+Necesitas Git y **Python 3.12**. El entorno se llama `nose`. Cada una crea el suyo: la carpeta no se sube a git.
+
+En la terminal (PowerShell):
+
+    git clone https://github.com/IRIA-PICO/SmartNose.git
+    cd SmartNose
+    py -3.12 -m venv nose
+    nose\Scripts\Activate.ps1
+    pip install -r requirements.txt
+
+- Si ya tienes el repositorio clonado, sáltate `git clone` y entra en la carpeta.
+- En macOS/Linux: `python3.12 -m venv nose` y `source nose/bin/activate`.
+- La instalación puede tardar varios minutos. Cuando el entorno está activado, aparece `(nose)` al principio de la línea.
+- Si PowerShell no deja activarlo, ejecuta `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned` y vuelve a activarlo (solo afecta a esa terminal).
+- En VS Code: `Ctrl+Shift+P` → **Python: Select Interpreter** → el de la carpeta `nose`.
+- Si la carpeta del proyecto está en OneDrive y la instalación da errores de rutas o archivos bloqueados, clona el proyecto fuera de OneDrive.
+
+**Cada vez que abras una terminal nueva**, activa el entorno con `nose\Scripts\Activate.ps1`. Si cambia `requirements.txt`, repite `pip install -r requirements.txt`.
+
 ## Ejecución
-Todos los comandos se lanzan desde la raíz del proyecto, con Python 3.12.
+Todos los comandos se lanzan desde la raíz del proyecto, con el entorno `nose` activado.
 
-1. Instalar (PowerShell):
-
-       py -3.12 -m venv .venv
-       .venv\Scripts\Activate.ps1
-       pip install -r requirements.txt
-
-   En macOS/Linux: `python3.12 -m venv .venv` y `source .venv/bin/activate`.
-
+1. Comprueba que has creado el entorno (apartado anterior).
 2. Descargar los datos: `python scripts/download_data.py`
 3. Preparar la tabla limpia: `python -m src.data_loader`
 4. API (terminal 1): `bentoml serve api.service:SmartNoseAPI` → http://localhost:3000
