@@ -20,7 +20,10 @@ API_URL = "http://localhost:3000"
 N_BATCHES = 10
 N_FEATURES = 128
 # El orden es fijo: es el mismo en la tabla, en el entrenamiento y en la API
-FEATURE_COLUMNS = [f"feature_{i}" for i in range(1, N_FEATURES + 1)]
+FEATURE_COLUMNS = []
+for numero in range(1, N_FEATURES + 1):
+    FEATURE_COLUMNS.append(f"feature_{numero}")  # feature_1 ... feature_128
+
 TABLE_COLUMNS = ["batch", "gas", "gas_name", "concentration"] + FEATURE_COLUMNS
 # Codificación según el texto de UCI. OJO: ver la duda abierta en data/README.md
 GAS_NAMES = {1: "Etanol", 2: "Etileno", 3: "Amoníaco",
