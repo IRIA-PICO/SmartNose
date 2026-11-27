@@ -23,9 +23,13 @@ for numero in range(1, N_FEATURES + 1):
     FEATURE_COLUMNS.append(f"feature_{numero}")
 
 TABLE_COLUMNS = ["batch", "gas", "gas_name", "concentration"] + FEATURE_COLUMNS
-# Codificación según el texto de UCI. OJO: ver la duda abierta en data/README.md
-GAS_NAMES = {1: "Etanol", 2: "Etileno", 3: "Amoníaco",
-             4: "Acetaldehído", 5: "Acetona", 6: "Tolueno"}
+# Nombre de cada código de gas. CAMBIO PROPUESTO por la Persona 1 (resuelve la duda abierta de
+# data/README.md): los recuentos por gas de los archivos solo cuadran con las tablas publicadas
+# si 1=Acetona, 2=Acetaldehído, 3=Etanol, 4=Etileno, 5=Amoníaco, 6=Tolueno. Antes (según el texto
+# de UCI) era 1=Etanol, 2=Etileno, 3=Amoníaco, 4=Acetaldehído, 5=Acetona, 6=Tolueno.
+# Los modelos usan el código, así que solo cambian los nombres (hay que regenerar el parquet).
+GAS_NAMES = {1: "Acetona", 2: "Acetaldehído", 3: "Etanol",
+             4: "Etileno", 5: "Amoníaco", 6: "Tolueno"}
 
 # --- Formato común de métricas (claves del dict) ---
 # f1_por_gas: {codigo_gas: f1}

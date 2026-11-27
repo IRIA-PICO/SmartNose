@@ -17,6 +17,7 @@ Importante: si la lanzas desde otra carpeta, Streamlit no encuentra `.streamlit/
     app/components/theme.py    colores de la presentación y plantilla de Plotly
     app/components/ui.py       CSS + piezas: cabecera(), fila_kpis(), nota(), grafico()...
     app/components/datos.py    cargar_datos() con caché y nombres de sensores ("S03 · ΔR")
+    app/components/eda_panels.py  paneles de análisis (PCA, correlaciones, atípicos, deriva, sensores): Lucía B.
     app/assets/                logo e icono
 
 Toda página nueva empieza igual:
