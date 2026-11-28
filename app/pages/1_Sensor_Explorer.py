@@ -6,7 +6,10 @@ Funciones públicas: ninguna (es una página de Streamlit).
 Estructura de la página:
   1. Filtros en la barra lateral -> tabla "filtrados"
   2. KPIs de lo que queda tras filtrar
-  3. Cuatro pestañas: mediciones por gas, gases por lote, sensores y comparador libre
+  3. Cuatro pestañas de Iria: mediciones por gas, gases por lote, sensores y comparador libre
+  4. Cinco pestañas de la Persona 1 (Lucía Barañano), cada una es una llamada a
+     components/eda_panels.py: PCA, correlación y redundancia, atípicos y calidad,
+     deriva por sensor y selección de sensores
 """
 import plotly.express as px
 import streamlit as st
@@ -14,6 +17,8 @@ import streamlit as st
 from components import theme as t
 from components.datos import (CARACTERISTICAS, N_CARACTERISTICAS, N_SENSORES,
                               cargar_datos, columna, nombre_legible)
+from components.eda_panels import (panel_calidad, panel_correlaciones, panel_deriva_sensores,
+                                   panel_pca, panel_seleccion_sensores)
 from components.ui import (cabecera, configurar_pagina, etiqueta, fila_kpis,
                            grafico, nota)
 
@@ -64,8 +69,10 @@ fila_kpis([
 ])
 st.html('<div style="height:1.2rem"></div>')
 
-pestana_gas, pestana_lote, pestana_sensor, pestana_libre = st.tabs(
-    ["Mediciones por gas", "Gases por lote", "Sensores", "Comparador libre"]
+(pestana_gas, pestana_lote, pestana_sensor, pestana_libre,
+ pestana_pca, pestana_corr, pestana_calidad, pestana_deriva, pestana_seleccion) = st.tabs(
+    ["Mediciones por gas", "Gases por lote", "Sensores", "Comparador libre",
+     "PCA", "Correlación y redundancia", "Atípicos y calidad", "Deriva por sensor", "Selección de sensores"]
 )
 
 with pestana_gas:
@@ -214,5 +221,21 @@ with pestana_libre:
          "Si los colores forman <b>grupos separados</b>, esas dos variables ya ayudan a distinguir gases. "
          "Colorea por lote para ver si los puntos se desplazan con el tiempo.")
 
-st.caption("Nota: los nombres de los gases siguen `GAS_NAMES` de src/contracts.py; "
-           "hay una duda abierta sobre la codificación (ver data/README.md).")
+# --- Pestañas de la Persona 1: los cálculos están en src/exploratory_analysis.py ---
+with pestana_pca:
+    panel_pca(filtrados)
+
+with pestana_corr:
+    panel_correlaciones(filtrados)
+
+with pestana_calidad:
+    panel_calidad(filtrados)
+
+with pestana_deriva:
+    panel_deriva_sensores(filtrados)
+
+with pestana_seleccion:
+    panel_seleccion_sensores(filtrados)
+
+st.caption("Nota: los nombres de los gases siguen `GAS_NAMES` de src/contracts.py "
+           "(codificación comprobada con los recuentos publicados, ver data/README.md).")

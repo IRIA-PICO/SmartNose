@@ -41,21 +41,30 @@ Mediciones por lote (las columnas 1-6 son los códigos de gas de los archivos):
 | 9 | 61 | 55 | 100 | 75 | 78 | 101 | 470 |
 | 10 | 600 | 600 | 600 | 600 | 600 | 600 | 3600 |
 
-## DUDA ABIERTA: nombre de cada código de gas
-El texto de UCI dice: 1 Etanol, 2 Etileno, 3 Amoníaco, 4 Acetaldehído, 5 Acetona, 6 Tolueno. Es lo que usa `GAS_NAMES`.
+## Nombre de cada código de gas (duda resuelta, pendiente de confirmar por el equipo)
+El texto de la página de UCI dice: 1 Etanol, 2 Etileno, 3 Amoníaco, 4 Acetaldehído, 5 Acetona, 6 Tolueno.
+Pero las **tablas de recuentos por gas y lote** de UCI y de *Data in Brief* (Fonollosa et al., 2015) no cuadran con esa
+codificación. Si se comparan gas a gas con los archivos, las cifras solo coinciden así:
 
-Pero la **tabla de recuentos por gas** de esa misma página no encaja con esa codificación. Para que sus cifras coincidan con los archivos habría que leer:
-
-| Código | Según el texto | Según la tabla de recuentos |
+| Código | Según el texto de UCI (antes en `GAS_NAMES`) | Según los recuentos publicados (ahora en `GAS_NAMES`) |
 |---|---|---|
-| 1 | Etanol | Acetona |
-| 2 | Etileno | Acetaldehído |
-| 3 | Amoníaco | Etanol |
-| 4 | Acetaldehído | Etileno |
-| 5 | Acetona | Amoníaco |
+| 1 | Etanol | **Acetona** |
+| 2 | Etileno | **Acetaldehído** |
+| 3 | Amoníaco | **Etanol** |
+| 4 | Acetaldehído | **Etileno** |
+| 5 | Acetona | **Amoníaco** |
 | 6 | Tolueno | Tolueno |
 
-Los rangos de concentración tampoco lo aclaran, porque no coinciden del todo con los que publica UCI.
-Observados por código (mín-máx, ppmv): 1: 2,5-600; 2: 2,5-300; 3: 2,5-1000; 4: 2,5-300; 5: 10-1000; 6: 1-230.
+Ejemplo (lote 1): las tablas publicadas dan Etanol 83, Etileno 30, Amoníaco 70, Acetaldehído 98, Acetona 90 y Tolueno 74.
+En `batch1.dat` los códigos 1 a 6 tienen 90, 98, 83, 30, 70 y 74 mediciones. Con la codificación nueva los recuentos
+coinciden en todos los lotes comprobados (1, 2, 3, 6 y 10); con la del texto de UCI no coincide ninguno. Un artículo que
+usa este dataset (arXiv 1505.06405, tabla I) enumera las columnas en el mismo orden: Acetona, Acetaldehído,
+Etanol, Etileno, Amoníaco, Tolueno. La comprobación se puede repetir en el apartado 1.2 del notebook y en
+`tests/test_exploratory.py`.
 
-**Pendiente:** revisar la publicación original (Vergara et al., 2012) o preguntar al profesor antes de interpretar resultados por gas. Los modelos trabajan con el código, así que solo cambiarían los nombres (`GAS_NAMES` en `src/contracts.py` y regenerar el parquet).
+**Qué cambia:** solo los nombres (`GAS_NAMES` en `src/contracts.py`). Los modelos trabajan con el código. Hay que
+regenerar el parquet (`python -m src.data_loader`) para que `gas_name` salga con los nombres nuevos.
+**Pendiente:** confirmarlo con la tabla del artículo original (Vergara et al., 2012) o con la profesora, y avisar al equipo
+(`contracts.py` es de la Persona 2). Si se decidiera volver a la codificación anterior, basta con restaurar ese diccionario.
+Los rangos de concentración tampoco los resuelven: los observados por código (mín-máx, ppmv) son 1: 2,5-600; 2: 2,5-300;
+3: 2,5-1000; 4: 2,5-300; 5: 10-1000; 6: 1-230 y no coinciden del todo con los que publica UCI.

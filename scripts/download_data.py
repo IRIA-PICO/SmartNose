@@ -2,10 +2,13 @@
 
 Responsable: Persona 1 (Lucía Barañano).
 Funciones públicas: main().
-Uso: python scripts/download_data.py
+Uso: python scripts/download_data.py [ruta_al_zip_local]
 """
 import hashlib
+import http.client
 import io
+import sys
+import time
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -16,12 +19,32 @@ RAW_DIR = ROOT / "data" / "raw"
 CHECKSUMS = ROOT / "data" / "checksums.txt"
 
 
+def descargar_zip(intentos=5):
+    """Descarga el zip reintentando si la conexión se corta a mitad."""
+    for intento in range(1, intentos + 1):
+        try:
+            print(f"Descargando {URL} (intento {intento}/{intentos})")
+            respuesta = urllib.request.urlopen(URL, timeout=120)
+            contenido = respuesta.read()
+            respuesta.close()
+            return contenido
+        except (OSError, http.client.HTTPException) as error:
+            print(f"  Falló la descarga: {error!r}")
+            if intento == intentos:
+                raise SystemExit(
+                    "No se pudo descargar. Alternativa: python scripts/download_data.py "
+                    "RUTA/AL/archivo.zip (el zip del dataset que ya tienes)."
+                )
+            time.sleep(3)
+
+
 def main():
-    # Descargamos el zip y lo abrimos en memoria
-    print(f"Descargando {URL}")
-    respuesta = urllib.request.urlopen(URL, timeout=120)
-    contenido_zip = respuesta.read()
-    respuesta.close()
+    # Si se pasa un zip local como argumento, lo usamos en vez de descargar
+    if len(sys.argv) > 1:
+        print(f"Usando zip local: {sys.argv[1]}")
+        contenido_zip = Path(sys.argv[1]).read_bytes()
+    else:
+        contenido_zip = descargar_zip()
     archivo_zip = zipfile.ZipFile(io.BytesIO(contenido_zip))
 
     # Leemos los 10 .dat y calculamos el hash de cada uno

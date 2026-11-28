@@ -6,7 +6,7 @@ Proyecto final de Analítica de Datos para la Industria. Entrega: **19 de diciem
 
 Flujo previsto: notebook + funciones de `src/` → Streamlit → API BentoML local (por HTTP).
 
-**Estado:** estructura inicial y carga de datos. Todavía no hay modelos, gráficas ni predicciones.
+**Estado:** carga de datos, análisis exploratorio (PCA, correlaciones, atípicos, deriva por sensor, importancia de sensores) y preprocesado listos; el análisis está en el notebook y en cinco pestañas nuevas de *Sensor Explorer*. Todavía no hay modelos ni predicciones.
 
 ## Primera vez: crear el entorno
 Necesitas Git y **Python 3.12**. El entorno se llama `nose`. Cada una crea el suyo: la carpeta no se sube a git.
@@ -37,15 +37,15 @@ Todos los comandos se lanzan desde la raíz del proyecto, con el entorno `nose` 
 4. API (terminal 1): `bentoml serve api.service:SmartNoseAPI` → http://localhost:3000
    Si el puerto 3000 está ocupado (por ejemplo, por Grafana), añade `--port 3123` y cambia `API_URL` en `src/contracts.py` solo en tu equipo, sin subir el cambio.
 5. App (terminal 2): `streamlit run app/Home.py`
-6. Tests: `python -m pytest`
+6. Tests: `python -m pytest` (los de datos reales se saltan si no has descargado `data/raw`; el de gráficos, si no tienes Plotly)
 
-Más información sobre el dataset en [data/README.md](data/README.md). **Hay una duda abierta sobre los nombres de los códigos de gas.**
+Más información sobre el dataset en [data/README.md](data/README.md). **Los nombres de los códigos de gas se han corregido (ver ese archivo): falta que el equipo lo confirme.**
 
 ## Reparto
 
 | Persona | Parte | Archivos | Rama |
 |---|---|---|---|
-| 1. Lucía Barañano | Datos y EDA | `data_loader.py`, `preprocessing.py`, `exploratory_analysis.py`, notebook | `feature/data` |
+| 1. Lucía Barañano | Datos y EDA | `data_loader.py`, `preprocessing.py`, `exploratory_analysis.py`, `eda_plots.py`, `app/components/eda_panels.py`, notebook (secciones 0-3) | `feature/data` |
 | 2. Lucía Díez | Modelos y deriva | `training.py`, `evaluation.py`, `drift_analysis.py`, modelos, notebook | `feature/models` |
 | 3. Iria | Streamlit | `Home.py`, páginas 1, 2 y 3 | `feature/dashboard` |
 | 4. Ane | BentoML e integración | `api/service.py`, `api_client.py`, página 4, tests, README | `feature/api` |
@@ -118,3 +118,15 @@ Antes de un pull request: `python -m pytest`. En el notebook, un solo editor.
 2. **Drift Monitor:** evolución por lote.
 3. **Model Lab:** elegir algoritmo y parámetros, entrenar y comparar.
 4. **Live Prediction:** elegir una medición o subir un CSV, enviarla a la API y mostrar el gas predicho.
+
+## Análisis exploratorio y preprocesado (Persona 1)
+Los cálculos devuelven tablas y no dibujan; los usan el notebook y la app:
+
+| Módulo | Qué hace |
+|---|---|
+| `src/preprocessing.py` | `separar_xy`, `dividir_por_lotes` (avisa si se entrena con el futuro), `crear_preprocesador` (log firmada + `StandardScaler`, primer bloque del Pipeline), `seleccionar_sensores`, nombres de sensores y características |
+| `src/exploratory_analysis.py` | recuentos por gas/lote/concentración, calidad, estadísticas, atípicos (solo se detectan), correlación y redundancia entre sensores, PCA, deriva por PCA y por sensor, importancia de sensores (ANOVA o Random Forest, por lotes) |
+| `src/eda_plots.py` | gráficos de Plotly para esas tablas (sin Streamlit) |
+| `app/components/eda_panels.py` | cinco paneles de Streamlit (`panel_pca`, `panel_correlaciones`, `panel_calidad`, `panel_deriva_sensores`, `panel_seleccion_sensores`) que se llaman desde *Sensor Explorer* con la tabla ya filtrada |
+
+Para usar `crear_preprocesador` en el entrenamiento: `Pipeline([("preproceso", crear_preprocesador()), ("modelo", ...)])`.
