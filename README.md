@@ -39,16 +39,16 @@ Todos los comandos se lanzan desde la raíz del proyecto, con el entorno `nose` 
 5. App (terminal 2): `streamlit run app/Home.py`
 6. Tests: `python -m pytest` (los de datos reales se saltan si no has descargado `data/raw`; el de gráficos, si no tienes Plotly)
 
-Más información sobre el dataset en [data/README.md](data/README.md). **Los nombres de los códigos de gas se han corregido (ver ese archivo): falta que el equipo lo confirme.**
+Más información sobre el dataset en [data/README.md](data/README.md). **Los nombres de los códigos de gas se han corregido y el equipo lo ha confirmado (ver ese archivo).**
 
 ## Reparto
 
-| Persona | Parte | Archivos | Rama |
-|---|---|---|---|
-| 1. Lucía Barañano | Datos y EDA | `data_loader.py`, `preprocessing.py`, `exploratory_analysis.py`, `eda_plots.py`, `app/components/eda_panels.py`, notebook (secciones 0-3) | `feature/data` |
-| 2. Lucía Díez | Modelos y deriva | `training.py`, `evaluation.py`, `drift_analysis.py`, modelos, notebook | `feature/models` |
-| 3. Iria | Streamlit | `Home.py`, páginas 1, 2 y 3 | `feature/dashboard` |
-| 4. Ane | BentoML e integración | `api/service.py`, `api_client.py`, página 4, tests, README | `feature/api` |
+| Persona | Parte | Archivos |
+|---|---|---|
+| 1. Lucía Barañano | Datos y EDA | `data_loader.py`, `preprocessing.py`, `exploratory_analysis.py`, `eda_plots.py`, `app/components/eda_panels.py`, notebook (secciones 0-3) |
+| 2. Lucía Díez | Modelos y deriva | `training.py`, `evaluation.py`, `drift_analysis.py`, modelos, notebook |
+| 3. Iria | Streamlit | `Home.py`, páginas 1, 2 y 3 |
+| 4. Ane | BentoML e integración | `api/service.py`, `api_client.py`, página 4, tests, README |
 
 - Iria no implementa algoritmos y Ane no reentrena: ambas usan lo que prepara la Persona 2.
 - Una sola persona integra el notebook (pendiente de decidir quién), para no tener conflictos en el `.ipynb`. Las demás ponen el código en `src/` y le pasan las celdas.
@@ -64,29 +64,27 @@ Definido en [src/contracts.py](src/contracts.py). Si cambia, se avisa a todo el 
 - **API:** entrada, lista de 128 floats en el orden de `FEATURE_COLUMNS`. Salida: `{gas, gas_name, probabilidades, aviso_fuera_de_rango}` (`probabilidades` solo si el modelo las ofrece). Usa el mismo pipeline guardado con joblib, sin reescalar a mano.
 
 ## Git
-No se trabaja directamente en `main` (la única excepción es el commit inicial con la estructura).
+**Trabajamos todas directamente en `main`, sin ramas ni pull requests.** Para que no haya conflictos, cada persona edita solo sus archivos (tabla de Reparto) y hace `git pull` antes de empezar y antes de subir.
 
-**Una vez**, quien hizo el commit inicial lo sube: `git push -u origin main`. Después, conviene proteger `main` en GitHub (*Settings → Branches*: exigir pull request).
-
-Cada persona crea su rama (ejemplo con la de datos; las otras son `feature/models`, `feature/dashboard` y `feature/api`):
+Una vez, para tener el proyecto:
 
     git clone https://github.com/IRIA-PICO/SmartNose.git
     cd SmartNose
-    git switch -c feature/data
-    git push -u origin feature/data
 
-Trabajo diario:
+Trabajo diario (en `main`):
 
+    git pull
     git add <archivos>
     git commit -m "Describe el cambio"
+    git pull
     git push
 
-Para integrar: abrir un **pull request** de la rama hacia `main`, que otra persona lo revise y entonces hacer *merge*. Para traer los cambios de `main` a tu rama:
-
-    git fetch origin
-    git merge origin/main
-
-Antes de un pull request: `python -m pytest`. En el notebook, un solo editor.
+- Si `git push` dice que ha sido rechazado, es que alguien ha subido antes: haz `git pull` y vuelve a hacer `git push`.
+- Sube cambios pequeños y a menudo, y no subas código que rompa los tests: antes de subir, `python -m pytest`.
+- Si hace falta tocar un archivo que es de otra persona (por ejemplo `src/contracts.py`), avísala antes.
+- Si `git pull` avisa de un conflicto, no lo resuelvas a ciegas: pregunta a quien editó ese archivo.
+- En el notebook, un solo editor a la vez. Las demás ponen el código en `src/` y le pasan las celdas.
+- En Colab, el notebook usa `RAMA = "main"`. Los cambios hechos solo en Colab no se suben a GitHub.
 
 **Entrega:** con todo en `main` y antes de que acabe el 19 de diciembre:
 

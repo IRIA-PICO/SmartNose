@@ -1,6 +1,6 @@
 """Contrato técnico compartido: constantes y formatos que usamos todas.
 
-Responsable: Persona 2 (Lucía Díez). Cualquier cambio se avisa al equipo y va por pull request.
+Responsable: Persona 2 (Lucía Díez). Cualquier cambio se avisa al equipo antes de subirlo a main.
 Funciones públicas: ninguna (solo constantes).
 """
 from pathlib import Path
